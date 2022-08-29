@@ -1,4 +1,4 @@
-import {extractPointsFromMesh} from './polygon.js';
+import {pointInMesh} from './polygon.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -57,6 +57,8 @@ scene.add( triangle_pink );
 scene.add( triangle_light_pink );
 scene.add( square );
 scene.add( diamond );
+
+pointInMesh([0, 0], triangle_green)
 
 
 function animate() {

@@ -1,27 +1,39 @@
-function arrayString(a) {
-    let aStr = ""
-    for (let i in a) {
-        aStr += a[i].toString()
+import { getIntersectionBetweenLines, getLineBetweenPoints, pointsOnSameSideOfLine, whichSideOfTheLine } from './math.js'
+
+function extractEdgesFromMesh(mesh) {
+    let edgeArray = new THREE.EdgesGeometry(mesh.geometry).attributes.position.array;
+
+    let edges = []
+    for (let i = 0; i < edgeArray.length; i += 6) {
+        edges.push({
+            first: [edgeArray[i], edgeArray[i + 1]],
+            second: [edgeArray[i + 3], edgeArray[i + 4]],
+        })
     }
-    return aStr
+    return edges
 }
 
-export function extractPointsFromMesh(mesh) {
-    let edges = new THREE.EdgesGeometry(mesh.geometry).attributes.position.array;
+export function pointInMesh(point, mesh) {
+    let edges = extractEdgesFromMesh(mesh),
+        hRay = getLineBetweenPoints([...point, 1], [...point, 0]),
+        hPerpendicularRay = getLineBetweenPoints([...point, 1], [-point[1], point[0], 0]),
+        rayOrientation = 1
 
-    let vertexMap = new Map();
-    for (let i = 0; i < edges.length; i += 6) {
-        vertexMap.set(arrayString([edges[i], edges[i + 1]]), [edges[i + 3], edges[i + 4]]);
+    let intersections = 0
+    for (const edge of edges) {
+        let hEdge = getLineBetweenPoints(edge.first, edge.second),
+            hIntersection = getIntersectionBetweenLines(hEdge, hRay)
+        if (whichSideOfTheLine(hPerpendicularRay, hIntersection) !== rayOrientation) {
+            continue
+        }
+
+        let hFirstPerpendicularEdge = getLineBetweenPoints([...edge.first, 1], [hEdge[0], hEdge[1], 0]),
+            hSecondPerpendicularEdge = getLineBetweenPoints([...edge.second, 1], [hEdge[0], hEdge[1], 0])
+
+        if (pointsOnSameSideOfLine(hFirstPerpendicularEdge, hIntersection, [...edge.second, 1]) &&
+            pointsOnSameSideOfLine(hSecondPerpendicularEdge, hIntersection, [...edge.first, 1])) {
+            intersections++
+        }
     }
-
-    let first = [edges[0], edges[1]], vertexes = [first]
-    for (
-        let vertex = vertexMap.get(arrayString(first));
-        arrayString(vertex) !== arrayString(first);
-        vertex = vertexMap.get(arrayString(vertex))
-    ) {
-        vertexes.push(vertex)
-    }
-
-    return vertexes
+    return (intersections%2 === 1)
 }
