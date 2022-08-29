@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2010-2022 Three.js Authors
+ * Copyright 2010-2022 Three.src Authors
  * SPDX-License-Identifier: MIT
  */
 (function (global, factory) {
@@ -9165,10 +9165,10 @@
 				depth: 1
 			};
 			const images = [image, image, image, image, image, image];
-			this.texture = new CubeTexture(images, options.mapping, options.wrapS, options.wrapT, options.magFilter, options.minFilter, options.format, options.type, options.anisotropy, options.encoding); // By convention -- likely based on the RenderMan spec from the 1990's -- cube maps are specified by WebGL (and three.js)
+			this.texture = new CubeTexture(images, options.mapping, options.wrapS, options.wrapT, options.magFilter, options.minFilter, options.format, options.type, options.anisotropy, options.encoding); // By convention -- likely based on the RenderMan spec from the 1990's -- cube maps are specified by WebGL (and three.src)
 			// in a coordinate system in which positive-x is to the right when looking up the positive-z axis -- in other words,
 			// in a left-handed coordinate system. By continuing this convention, preexisting cube maps continued to render correctly.
-			// three.js uses a right-handed coordinate system. So environment maps used in three.js appear to have px and nx swapped
+			// three.src uses a right-handed coordinate system. So environment maps used in three.src appear to have px and nx swapped
 			// and the flag isRenderTargetTexture controls this conversion. The flip is not required when using WebGLCubeRenderTarget.texture
 			// as a cube texture (this is detected when isRenderTargetTexture is set to true for cube textures).
 
@@ -11639,7 +11639,7 @@
 	const LOD_MIN = 4; // The standard deviations (radians) associated with the extra mips. These are
 	// chosen to approximate a Trowbridge-Reitz distribution function times the
 	// geometric shadowing function. These sigma values squared must match the
-	// variance #defines in cube_uv_reflection_fragment.glsl.js.
+	// variance #defines in cube_uv_reflection_fragment.glsl.src.
 
 	const EXTRA_LOD_SIGMA = [0.125, 0.215, 0.35, 0.446, 0.526, 0.582]; // The maximum length of the blur for loop. Smaller sigmas will use fewer
 	// samples and exit early, but not recompile the shader.
@@ -14097,7 +14097,7 @@
 	}
 
 	function WebGLProgram(renderer, cacheKey, parameters, bindingStates) {
-		// TODO Send this event to Three.js DevTools
+		// TODO Send this event to Three.src DevTools
 		// console.log( 'WebGLProgram', cacheKey );
 		const gl = renderer.getContext();
 		const defines = parameters.defines;
@@ -22971,7 +22971,7 @@
 	 - http://ideone.com/NoEbVM
 
 	This CubicPoly class could be used for reusing some variables and calculations,
-	but for three.js curve use, it could be possible inlined and flatten into a single function call
+	but for three.src curve use, it could be possible inlined and flatten into a single function call
 	which can be placed in CurveUtils.
 	*/
 
@@ -34544,7 +34544,7 @@
 	/**
 	 *	- shows frustum, line of sight and up of the camera
 	 *	- suitable for fast updates
-	 * 	- based on frustum visualization in lightgl.js shadowmap example
+	 * 	- based on frustum visualization in lightgl.src shadowmap example
 	 *		https://github.com/evanw/lightgl.js/blob/master/tests/shadowmap.html
 	 */
 
@@ -35370,7 +35370,7 @@
 
 	class ParametricGeometry extends BufferGeometry {
 		constructor() {
-			console.error('THREE.ParametricGeometry has been moved to /examples/jsm/geometries/ParametricGeometry.js');
+			console.error('THREE.ParametricGeometry has been moved to /examples/jsm/geometries/ParametricGeometry.src');
 			super();
 		}
 
@@ -35378,18 +35378,18 @@
 
 	class TextGeometry extends BufferGeometry {
 		constructor() {
-			console.error('THREE.TextGeometry has been moved to /examples/jsm/geometries/TextGeometry.js');
+			console.error('THREE.TextGeometry has been moved to /examples/jsm/geometries/TextGeometry.src');
 			super();
 		}
 
 	} // r133, eb58ff153119090d3bbb24474ea0ffc40c70dc92
 
 	function FontLoader() {
-		console.error('THREE.FontLoader has been moved to /examples/jsm/loaders/FontLoader.js');
+		console.error('THREE.FontLoader has been moved to /examples/jsm/loaders/FontLoader.src');
 	} // r133, eb58ff153119090d3bbb24474ea0ffc40c70dc92
 
 	function Font() {
-		console.error('THREE.Font has been moved to /examples/jsm/loaders/FontLoader.js');
+		console.error('THREE.Font has been moved to /examples/jsm/loaders/FontLoader.src');
 	} // r134, d65e0af06644fe5a84a6fc0e372f4318f95a04c0
 
 	function ImmediateRenderObject() {
@@ -35431,7 +35431,7 @@
 
 	if (typeof window !== 'undefined') {
 		if (window.__THREE__) {
-			console.warn('WARNING: Multiple instances of Three.js being imported.');
+			console.warn('WARNING: Multiple instances of Three.src being imported.');
 		} else {
 			window.__THREE__ = REVISION;
 		}
