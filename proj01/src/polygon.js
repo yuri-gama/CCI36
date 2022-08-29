@@ -29,7 +29,6 @@ export function pointInMesh(point, mesh) {
 
         let hFirstPerpendicularEdge = getLineBetweenPoints([...edge.first, 1], [hEdge[0], hEdge[1], 0]),
             hSecondPerpendicularEdge = getLineBetweenPoints([...edge.second, 1], [hEdge[0], hEdge[1], 0])
-
         if (pointsOnSameSideOfLine(hFirstPerpendicularEdge, hIntersection, [...edge.second, 1]) &&
             pointsOnSameSideOfLine(hSecondPerpendicularEdge, hIntersection, [...edge.first, 1])) {
             intersections++
