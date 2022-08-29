@@ -22,8 +22,7 @@ function createTriangle(p1,p2,p3, color, origin_x, origin_y){
     let geometry = new THREE.ShapeGeometry( triangle );
     let material = new THREE.MeshBasicMaterial( { color: color } );
     return new THREE.Mesh( geometry, material ) ;
-
-};
+}
 
 function createSquare(p1,p2,p3, p4, color, origin_x, origin_y){
     let square = new THREE.Shape([new THREE.Vector2(origin_x + p1[0],origin_x + p1[1]), new THREE.Vector2(origin_x + p2[0], origin_y + p2[1]), new THREE.Vector2(origin_x + p3[0], origin_y + p3[1]), new THREE.Vector2(origin_x + p4[0], origin_y + p4[1])]);
@@ -31,8 +30,7 @@ function createSquare(p1,p2,p3, p4, color, origin_x, origin_y){
     let geometry = new THREE.ShapeGeometry( square );
     let material = new THREE.MeshBasicMaterial( { color: color } );
     return new THREE.Mesh( geometry, material ) ;
-
-};
+}
 
 // Shapes
 
@@ -58,5 +56,9 @@ scene.add( triangle_light_pink );
 scene.add( square );
 scene.add( diamond );
 
-
-renderer.render( scene, camera );
+function animate() {
+    requestAnimationFrame(animate);
+    triangle_green.rotation.z += 0.01;
+    renderer.render(scene, camera);
+}
+animate();
