@@ -1,4 +1,4 @@
-import {pointInMesh} from './polygon.js';
+import {Tracker} from './tracker.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -58,7 +58,20 @@ scene.add( triangle_light_pink );
 scene.add( square );
 scene.add( diamond );
 
-pointInMesh([0, 0], triangle_green)
+let tracker = new Tracker([triangle_green, triangle_red, triangle_blue, triangle_pink, triangle_light_pink, square, diamond])
+
+document.addEventListener('mouseup', (event) => {
+    event.preventDefault()
+    tracker.disable()
+}, false)
+document.addEventListener('mousedown', (event) => {
+    event.preventDefault()
+    tracker.enable([event.clientX, event.clientY])
+}, false)
+document.addEventListener('mousemove', (event) => {
+    event.preventDefault()
+    tracker.track([event.clientX, event.clientY])
+}, false)
 
 
 function animate() {
