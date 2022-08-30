@@ -1,6 +1,6 @@
 import { getIntersectionBetweenLines, getLineBetweenPoints, pointsOnSameSideOfLine } from './math.js'
 
-function extractEdgesFromMesh(mesh, camera) {
+function extractEdgesFromMesh(mesh, camera, renderer) {
     let edgeArray = new THREE.EdgesGeometry(mesh.geometry).attributes.position.array;
 
     let edges = []
@@ -10,8 +10,9 @@ function extractEdgesFromMesh(mesh, camera) {
             new THREE.Vector3(edgeArray[i], edgeArray[i + 1], edgeArray[i + 2]),
             new THREE.Vector3(edgeArray[i + 3], edgeArray[i + 4], edgeArray[i + 5]),
         ]
-        let halfWidth = window.innerWidth/2,
-            halfHeight = window.innerHeight/2
+        let canvasRect = renderer.domElement.getBoundingClientRect()
+        let halfWidth = canvasRect.width/2,
+            halfHeight = canvasRect.height/2
         for (let v of vertexes) {
             mesh.localToWorld(v)
             v.project(camera)
@@ -26,8 +27,8 @@ function extractEdgesFromMesh(mesh, camera) {
     return edges
 }
 
-export function pointInMesh(point, mesh, camera) {
-    let edges = extractEdgesFromMesh(mesh, camera),
+export function pointInMesh(point, mesh, camera, renderer) {
+    let edges = extractEdgesFromMesh(mesh, camera, renderer),
         hRay = getLineBetweenPoints([...point, 1], [...point, 0]),
         hPerpendicularRay = getLineBetweenPoints([...point, 1], [-point[1], point[0], 0]),
         rayOrientation = [...point, 0.5]

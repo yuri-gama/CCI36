@@ -1,13 +1,14 @@
 import { pointInMesh } from './polygon.js'
 
 export class Tracker {
-    constructor(meshes, camera) {
+    constructor(meshes, camera, renderer) {
         this.meshes = meshes
         this.camera = camera
         this.currentMesh = null
         this.enabled = false
         this.worldMousePos = null
         this.meshLastPos = null
+        this.renderer = renderer
     }
 
     enable(mousePos) {
@@ -15,7 +16,7 @@ export class Tracker {
         this.worldMousePos = this.projectIntoWorld(mousePos)
 
         for (let mesh of this.meshes) {
-            if (pointInMesh(mousePos, mesh, this.camera)) {
+            if (pointInMesh(mousePos, mesh, this.camera, this.renderer)) {
                 this.currentMesh = mesh
             }
         }
@@ -41,9 +42,11 @@ export class Tracker {
     }
 
     projectIntoWorld(pos) {
+        this.camera.updateWorldMatrix()
+        let canvasRect = this.renderer.domElement.getBoundingClientRect()
         let pointingRay = new THREE.Vector3(
-            2*pos[0]/window.innerWidth - 1,
-            -2*pos[1]/window.innerHeight + 1,
+            2*pos[0]/canvasRect.width - 1,
+            -2*pos[1]/canvasRect.height + 1,
             this.camera.position.z,
         ).unproject(this.camera).sub(this.camera.position).normalize()
         pointingRay.multiplyScalar(-this.camera.position.z/pointingRay.z)

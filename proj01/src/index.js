@@ -60,7 +60,8 @@ scene.add( diamond );
 
 let tracker = new Tracker(
     [triangle_green, triangle_red, triangle_blue, triangle_pink, triangle_light_pink, square, diamond],
-    camera
+    camera,
+    renderer
 )
 
 document.addEventListener('mouseup', (event) => {
@@ -69,11 +70,12 @@ document.addEventListener('mouseup', (event) => {
 }, false)
 document.addEventListener('mousedown', (event) => {
     event.preventDefault()
-    tracker.enable([event.clientX, event.clientY])
+    tracker.enable([event.pageX - renderer.domElement.getBoundingClientRect().left, event.pageY - renderer.domElement.getBoundingClientRect().top])
 }, false)
 document.addEventListener('mousemove', (event) => {
     event.preventDefault()
-    tracker.track([event.clientX, event.clientY])
+    tracker.track([event.pageX - renderer.domElement.getBoundingClientRect().left, event.pageY - renderer.domElement.getBoundingClientRect().top])
+    console.log([renderer.domElement.getBoundingClientRect()])
 }, false)
 
 
