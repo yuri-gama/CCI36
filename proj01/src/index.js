@@ -58,7 +58,10 @@ scene.add( triangle_light_pink );
 scene.add( square );
 scene.add( diamond );
 
-let tracker = new Tracker([triangle_green, triangle_red, triangle_blue, triangle_pink, triangle_light_pink, square, diamond])
+let tracker = new Tracker(
+    [triangle_green, triangle_red, triangle_blue, triangle_pink, triangle_light_pink, square, diamond],
+    camera
+)
 
 document.addEventListener('mouseup', (event) => {
     event.preventDefault()
@@ -70,7 +73,7 @@ document.addEventListener('mousedown', (event) => {
 }, false)
 document.addEventListener('mousemove', (event) => {
     event.preventDefault()
-    tracker.track([event.clientX, event.clientY])
+    tracker.track([origin_x + event.clientX, origin_y + event.clientY])
 }, false)
 
 

@@ -25,9 +25,5 @@ export function getIntersectionBetweenLines(a, b) {
 }
 
 export function pointsOnSameSideOfLine(l, a, b) {
-    return Math.sign(dot(l, a)) === Math.sign(dot(l, b))
-}
-
-export function whichSideOfTheLine(l, a) {
-    return Math.sign(dot(l, a))
+    return Math.sign(dot(l, a)*a[2]) === Math.sign(dot(l, b)*b[2])
 }

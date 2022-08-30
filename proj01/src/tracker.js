@@ -1,8 +1,9 @@
 import { pointInMesh } from './polygon.js'
 
 export class Tracker {
-    constructor(meshes) {
+    constructor(meshes, camera) {
         this.meshes = meshes
+        this.camera = camera
         this.currentMesh = null
         this.enabled = false
         this.mousePos = null
@@ -13,7 +14,8 @@ export class Tracker {
         this.mousePos = mousePos
 
         for (let mesh of this.meshes) {
-            if (pointInMesh(this.mousePos, mesh)) {
+            if (pointInMesh(this.mousePos, mesh, this.camera)) {
+                console.log('yes')
                 this.currentMesh = mesh
             }
         }
@@ -29,8 +31,6 @@ export class Tracker {
             return
         }
 
-        console.log(this.enabled)
-        console.log(this.currentMesh)
         this.currentMesh.position.x += mousePos[0] - this.mousePos[0]
         this.currentMesh.position.y += mousePos[1] - this.mousePos[1]
         this.mousePos = mousePos

@@ -1,29 +1,40 @@
-import { getIntersectionBetweenLines, getLineBetweenPoints, pointsOnSameSideOfLine, whichSideOfTheLine } from './math.js'
+import { getIntersectionBetweenLines, getLineBetweenPoints, pointsOnSameSideOfLine } from './math.js'
 
-function extractEdgesFromMesh(mesh) {
+function extractEdgesFromMesh(mesh, camera) {
     let edgeArray = new THREE.EdgesGeometry(mesh.geometry).attributes.position.array;
 
     let edges = []
     for (let i = 0; i < edgeArray.length; i += 6) {
+        camera.updateMatrixWorld()
+        let vertexes = [
+            new THREE.Vector3(edgeArray[i], edgeArray[i + 1]).project(camera),
+            new THREE.Vector3(edgeArray[i + 3], edgeArray[i + 4]).project(camera),
+        ]
+        let halfWidth = window.innerWidth/2,
+            halfHeight = window.innerHeight/2
+        for (let v of vertexes) {
+            v.x = (v.x*halfWidth) + halfWidth
+            v.y = -(v.y*halfHeight) + halfHeight
+        }
         edges.push({
-            first: [edgeArray[i], edgeArray[i + 1]],
-            second: [edgeArray[i + 3], edgeArray[i + 4]],
+            first: [vertexes[0].x, vertexes[0].y],
+            second: [vertexes[1].x, vertexes[1].y],
         })
     }
     return edges
 }
 
-export function pointInMesh(point, mesh) {
-    let edges = extractEdgesFromMesh(mesh),
+export function pointInMesh(point, mesh, camera) {
+    let edges = extractEdgesFromMesh(mesh, camera),
         hRay = getLineBetweenPoints([...point, 1], [...point, 0]),
         hPerpendicularRay = getLineBetweenPoints([...point, 1], [-point[1], point[0], 0]),
-        rayOrientation = 1
+        rayOrientation = [...point, 0.5]
 
     let intersections = 0
     for (const edge of edges) {
-        let hEdge = getLineBetweenPoints(edge.first, edge.second),
+        let hEdge = getLineBetweenPoints([...edge.first, 1], [...edge.second, 1]),
             hIntersection = getIntersectionBetweenLines(hEdge, hRay)
-        if (whichSideOfTheLine(hPerpendicularRay, hIntersection) !== rayOrientation) {
+        if (pointsOnSameSideOfLine(hPerpendicularRay, hIntersection, rayOrientation)) {
             continue
         }
 
