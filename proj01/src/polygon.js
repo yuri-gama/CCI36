@@ -7,12 +7,14 @@ function extractEdgesFromMesh(mesh, camera) {
     for (let i = 0; i < edgeArray.length; i += 6) {
         camera.updateMatrixWorld()
         let vertexes = [
-            new THREE.Vector3(edgeArray[i], edgeArray[i + 1]).project(camera),
-            new THREE.Vector3(edgeArray[i + 3], edgeArray[i + 4]).project(camera),
+            new THREE.Vector3(edgeArray[i], edgeArray[i + 1], edgeArray[i + 2]),
+            new THREE.Vector3(edgeArray[i + 3], edgeArray[i + 4], edgeArray[i + 5]),
         ]
         let halfWidth = window.innerWidth/2,
             halfHeight = window.innerHeight/2
         for (let v of vertexes) {
+            mesh.localToWorld(v)
+            v.project(camera)
             v.x = (v.x*halfWidth) + halfWidth
             v.y = -(v.y*halfHeight) + halfHeight
         }

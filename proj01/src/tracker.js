@@ -7,16 +7,21 @@ export class Tracker {
         this.currentMesh = null
         this.enabled = false
         this.worldMousePos = null
+        this.meshLastPos = null
     }
 
     enable(mousePos) {
         this.enabled = true
+        console.log(mousePos)
         this.worldMousePos = this.projectIntoWorld(mousePos)
 
         for (let mesh of this.meshes) {
             if (pointInMesh(mousePos, mesh, this.camera)) {
                 this.currentMesh = mesh
             }
+        }
+        if (this.currentMesh) {
+            this.meshLastPos = [this.currentMesh.position.x, this.currentMesh.position.y]
         }
     }
 
@@ -26,13 +31,15 @@ export class Tracker {
     }
 
     track(mousePos) {
-        if (!this.enabled || !this.worldMousePos || !this.currentMesh) {
+        if (!this.enabled || !this.currentMesh) {
             return
         }
 
         let worldMousePos = this.projectIntoWorld(mousePos)
-        this.currentMesh.position.x = worldMousePos[0] - this.worldMousePos[0]
-        this.currentMesh.position.y = worldMousePos[1] - this.worldMousePos[1]
+        console.log(worldMousePos[0] - this.worldMousePos[0], worldMousePos[1] - this.worldMousePos[1])
+        this.currentMesh.position.setX(this.meshLastPos[0] + worldMousePos[0] - this.worldMousePos[0])
+        this.currentMesh.position.setY(this.meshLastPos[1] + worldMousePos[1] - this.worldMousePos[1])
+        this.currentMesh.geometry.attributes.position.needsUpdate = true
     }
 
     projectIntoWorld(pos) {
