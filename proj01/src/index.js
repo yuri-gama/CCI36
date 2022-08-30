@@ -79,7 +79,6 @@ document.addEventListener('mousemove', (event) => {
 
 function animate() {
     requestAnimationFrame(animate);
-    triangle_green.rotation.z += 0.01;
     renderer.render(scene, camera);
 }
 animate();

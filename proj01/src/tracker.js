@@ -12,7 +12,6 @@ export class Tracker {
 
     enable(mousePos) {
         this.enabled = true
-        console.log(mousePos)
         this.worldMousePos = this.projectIntoWorld(mousePos)
 
         for (let mesh of this.meshes) {
@@ -36,7 +35,6 @@ export class Tracker {
         }
 
         let worldMousePos = this.projectIntoWorld(mousePos)
-        console.log(worldMousePos[0] - this.worldMousePos[0], worldMousePos[1] - this.worldMousePos[1])
         this.currentMesh.position.setX(this.meshLastPos[0] + worldMousePos[0] - this.worldMousePos[0])
         this.currentMesh.position.setY(this.meshLastPos[1] + worldMousePos[1] - this.worldMousePos[1])
         this.currentMesh.geometry.attributes.position.needsUpdate = true
