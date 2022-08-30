@@ -73,7 +73,7 @@ document.addEventListener('mousedown', (event) => {
 }, false)
 document.addEventListener('mousemove', (event) => {
     event.preventDefault()
-    tracker.track([origin_x + event.clientX, origin_y + event.clientY])
+    tracker.track([event.clientX, event.clientY])
 }, false)
 
 

@@ -6,16 +6,15 @@ export class Tracker {
         this.camera = camera
         this.currentMesh = null
         this.enabled = false
-        this.mousePos = null
+        this.worldMousePos = null
     }
 
     enable(mousePos) {
         this.enabled = true
-        this.mousePos = mousePos
+        this.worldMousePos = this.projectIntoWorld(mousePos)
 
         for (let mesh of this.meshes) {
-            if (pointInMesh(this.mousePos, mesh, this.camera)) {
-                console.log('yes')
+            if (pointInMesh(mousePos, mesh, this.camera)) {
                 this.currentMesh = mesh
             }
         }
@@ -27,12 +26,23 @@ export class Tracker {
     }
 
     track(mousePos) {
-        if (!this.enabled || !this.mousePos || !this.currentMesh) {
+        if (!this.enabled || !this.worldMousePos || !this.currentMesh) {
             return
         }
 
-        this.currentMesh.position.x += mousePos[0] - this.mousePos[0]
-        this.currentMesh.position.y += mousePos[1] - this.mousePos[1]
-        this.mousePos = mousePos
+        let worldMousePos = this.projectIntoWorld(mousePos)
+        this.currentMesh.position.x = worldMousePos[0] - this.worldMousePos[0]
+        this.currentMesh.position.y = worldMousePos[1] - this.worldMousePos[1]
+    }
+
+    projectIntoWorld(pos) {
+        let pointingRay = new THREE.Vector3(
+            2*pos[0]/window.innerWidth - 1,
+            -2*pos[1]/window.innerHeight + 1,
+            this.camera.position.z,
+        ).unproject(this.camera).sub(this.camera.position).normalize()
+        pointingRay.multiplyScalar(-this.camera.position.z/pointingRay.z)
+        let worldPos = new THREE.Vector3().copy(this.camera.position).add(pointingRay)
+        return [worldPos.x, worldPos.y]
     }
 }
