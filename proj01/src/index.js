@@ -1,4 +1,5 @@
 import {Tracker} from './tracker.js';
+import {Projector} from './projector.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -60,8 +61,7 @@ scene.add( diamond );
 
 let tracker = new Tracker(
     [triangle_green, triangle_red, triangle_blue, triangle_pink, triangle_light_pink, square, diamond],
-    camera,
-    renderer
+    new Projector(camera, renderer)
 )
 
 document.addEventListener('mouseup', (event) => {
@@ -70,12 +70,11 @@ document.addEventListener('mouseup', (event) => {
 }, false)
 document.addEventListener('mousedown', (event) => {
     event.preventDefault()
-    tracker.enable([event.pageX - renderer.domElement.getBoundingClientRect().left, event.pageY - renderer.domElement.getBoundingClientRect().top])
+    tracker.enable([event.clientX, event.clientY])
 }, false)
 document.addEventListener('mousemove', (event) => {
     event.preventDefault()
-    tracker.track([event.pageX - renderer.domElement.getBoundingClientRect().left, event.pageY - renderer.domElement.getBoundingClientRect().top])
-    console.log([renderer.domElement.getBoundingClientRect()])
+    tracker.track([event.clientX, event.clientY])
 }, false)
 
 

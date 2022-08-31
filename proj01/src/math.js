@@ -27,3 +27,10 @@ export function getIntersectionBetweenLines(a, b) {
 export function pointsOnSameSideOfLine(l, a, b) {
     return Math.sign(dot(l, a)*a[2]) === Math.sign(dot(l, b)*b[2])
 }
+
+export function pointBetweenPoints(p, a, b) {
+    let edge = getLineBetweenPoints(a, b),
+        perpendicularThroughA = getLineBetweenPoints(a, [edge[0], edge[1], 0]),
+        perpendicularThroughB = getLineBetweenPoints(b, [edge[0], edge[1], 0])
+    return (pointsOnSameSideOfLine(perpendicularThroughA, p, b) && pointsOnSameSideOfLine(perpendicularThroughB, p, a))
+}
