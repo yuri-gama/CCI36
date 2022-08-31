@@ -25,7 +25,14 @@ export function getIntersectionBetweenLines(a, b) {
 }
 
 export function pointsOnSameSideOfLine(l, a, b) {
-    return Math.sign(dot(l, a)*a[2]) === Math.sign(dot(l, b)*b[2])
+    let normA = [...a], normB = [...b]
+    if (a[2] < 0) {
+        normA = [-a[0], -a[1], -a[2]]
+    }
+    if (b[2] < 0) {
+        normB = [-b[0], -b[1], -b[2]]
+    }
+    return (Math.sign(dot(l, normA))*Math.sign(dot(l, normB)) >= 0)
 }
 
 export function pointBetweenPoints(p, a, b) {
@@ -33,4 +40,12 @@ export function pointBetweenPoints(p, a, b) {
         perpendicularThroughA = getLineBetweenPoints(a, [edge[0], edge[1], 0]),
         perpendicularThroughB = getLineBetweenPoints(b, [edge[0], edge[1], 0])
     return (pointsOnSameSideOfLine(perpendicularThroughA, p, b) && pointsOnSameSideOfLine(perpendicularThroughB, p, a))
+}
+
+export function segmentsIntersect(a, b, m, n) {
+    let ab = getLineBetweenPoints(a, b),
+        mn = getLineBetweenPoints(m, n),
+        intersection = getIntersectionBetweenLines(ab, mn)
+
+    return (pointBetweenPoints(intersection, a, b) && pointBetweenPoints(intersection, m, n))
 }
