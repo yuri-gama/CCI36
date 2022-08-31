@@ -37,30 +37,29 @@ function createSquare(p1,p2,p3, p4, color, origin_x, origin_y){
 
 // Shapes
 
-let triangle_green = createTriangle([0,0], [90,0], [45,45], 0x00ff00, origin_x, origin_y);
+let shapes = [createTriangle([0,0], [90,0], [45,45], 0x00ff00, origin_x, origin_y),
+            createTriangle([0,0], [0,180], [90,90], 0xff0000, origin_x, origin_y),
+            createTriangle([0,180], [180,180], [90,90], 0x0000ff, origin_x, origin_y),
+            createTriangle([90,0], [180,0], [180,90], 0xff0084, origin_x, origin_y),
+            createTriangle([90,90], [135,135], [135, 45], 0xffc0cb, origin_x, origin_y),
+            createSquare([45,45], [90,90], [135, 45], [90, 0], 0x00c0cb, origin_x, origin_y),
+            createSquare([135,135], [180,180], [180, 90], [135, 45], 0xffffff, origin_x, origin_y)]
 
-let triangle_red = createTriangle([0,0], [0,180], [90,90], 0xff0000, origin_x, origin_y);
 
-let triangle_blue = createTriangle([0,180], [180,180], [90,90], 0x0000ff, origin_x, origin_y);
+for (let shape of shapes){
+    scene.add(shape)
+}
 
-let triangle_pink = createTriangle([90,0], [180,0], [180,90], 0xff0084, origin_x, origin_y);
-
-let triangle_light_pink = createTriangle([90,90], [135,135], [135, 45], 0xffc0cb, origin_x, origin_y);
-
-let square = createSquare([45,45], [90,90], [135, 45], [90, 0], 0x00c0cb, origin_x, origin_y);
-
-let diamond = createSquare([135,135], [180,180], [180, 90], [135, 45], 0xffffff, origin_x, origin_y);
-
-scene.add( triangle_green );
-scene.add( triangle_red );
-scene.add( triangle_blue );
-scene.add( triangle_pink );
-scene.add( triangle_light_pink );
-scene.add( square );
-scene.add( diamond );
+for (let currentMesh of shapes){
+    let center = new THREE.Vector3();
+    currentMesh.geometry.computeBoundingBox();
+    currentMesh.geometry.boundingBox.getCenter(center);
+    currentMesh.geometry.center();
+    currentMesh.position.copy(center);
+}
 
 let tracker = new Tracker(
-    [triangle_green, triangle_red, triangle_blue, triangle_pink, triangle_light_pink, square, diamond],
+    shapes,
     new Projector(camera, renderer)
 )
 
@@ -75,6 +74,12 @@ document.addEventListener('mousedown', (event) => {
 document.addEventListener('mousemove', (event) => {
     event.preventDefault()
     tracker.track([event.clientX, event.clientY])
+}, false)
+
+document.addEventListener('wheel', (event) =>{
+    tracker.enable([event.clientX, event.clientY])
+    tracker.rotate()
+    tracker.disable()
 }, false)
 
 

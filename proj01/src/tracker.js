@@ -45,4 +45,19 @@ export class Tracker {
         this.currentMesh.position.setY(this.meshLastPos[1] + worldMousePos[1] - this.worldMousePos[1])
         this.currentMesh.geometry.attributes.position.needsUpdate = true
     }
+
+    rotate(){
+        if (!this.enabled || !this.currentMesh) {
+            return
+        }
+
+        let theta = 1.57
+
+       
+        this.currentMesh.rotateZ(0.01)
+       
+
+        this.currentMesh.geometry.attributes.position.needsUpdate = true
+
+    }
 }
