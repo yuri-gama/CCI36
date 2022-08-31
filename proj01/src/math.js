@@ -16,6 +16,10 @@ function dot(a, b) {
     return res
 }
 
+function not(a) {
+    return [-a[0], -a[1], -a[2]]
+}
+
 export function getLineBetweenPoints(a, b) {
     return cross(a, b)
 }
@@ -27,10 +31,10 @@ export function getIntersectionBetweenLines(a, b) {
 export function pointsOnSameSideOfLine(l, a, b) {
     let normA = [...a], normB = [...b]
     if (a[2] < 0) {
-        normA = [-a[0], -a[1], -a[2]]
+        normA = not(normA)
     }
     if (b[2] < 0) {
-        normB = [-b[0], -b[1], -b[2]]
+        normB = not(normB)
     }
     return (Math.sign(dot(l, normA))*Math.sign(dot(l, normB)) >= 0)
 }
