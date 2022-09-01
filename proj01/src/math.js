@@ -49,3 +49,10 @@ export function segmentsIntersect(a, b, m, n) {
 
     return (pointBetweenPoints(intersection, a, b) && pointBetweenPoints(intersection, m, n))
 }
+
+export function angleBetweenVectors(a,b){
+    const cos = (dot(a,b))/Math.sqrt(dot(a,a)*dot(b,b))
+    const signal = a[0]*b[1] - a[1]*b[0]
+
+    return Math.sign(signal)*Math.acos(cos)
+}

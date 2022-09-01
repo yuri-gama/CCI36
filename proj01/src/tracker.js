@@ -1,5 +1,6 @@
 import { pointInPolygon } from './polygon.js'
 import { extractEdgesFromMesh } from './mesh.js'
+import {angleBetweenVectors} from "./math.js";
 
 export class Tracker {
     constructor(meshes, projector) {
@@ -9,9 +10,12 @@ export class Tracker {
         this.enabled = false
         this.worldMousePos = null
         this.meshLastPos = null
+        this.rotateEnable = false
+        this.worldMousePosRotate = null
     }
 
-    enable(mousePos) {
+    enable(mousePos, rotateEnable) {
+        this.rotateEnable = rotateEnable
         this.enabled = true
         this.worldMousePos = this.projector.projectWindowIntoWorld(mousePos)
 
@@ -32,6 +36,7 @@ export class Tracker {
 
     disable() {
         this.enabled = false
+        this.rotateEnable = false
         this.currentMesh = null
     }
 
@@ -41,23 +46,34 @@ export class Tracker {
         }
 
         let worldMousePos = this.projector.projectWindowIntoWorld(mousePos)
-        this.currentMesh.position.setX(this.meshLastPos[0] + worldMousePos[0] - this.worldMousePos[0])
-        this.currentMesh.position.setY(this.meshLastPos[1] + worldMousePos[1] - this.worldMousePos[1])
+        if (!this.rotateEnable) {
+            this.currentMesh.position.setX(this.meshLastPos[0] + worldMousePos[0] - this.worldMousePos[0])
+            this.currentMesh.position.setY(this.meshLastPos[1] + worldMousePos[1] - this.worldMousePos[1])
+        }
+        else{
+            const angleRotate = angleBetweenVectors(this.worldMousePosRotate, worldMousePos)
+            if (!isNaN(angleRotate)) {
+                this.rotate(angleRotate)
+                this.worldMousePosRotate = worldMousePos
+
+            }
+            this.worldMousePosRotate = worldMousePos
+
+        }
         this.currentMesh.geometry.attributes.position.needsUpdate = true
     }
 
-    rotate(){
-        if (!this.enabled || !this.currentMesh) {
+    rotate(theta){
+        if (!this.enabled || !this.currentMesh || !this.rotateEnable) {
             return
         }
-
-        let theta = 1.57
-
        
-        this.currentMesh.rotateZ(0.01)
+        this.currentMesh.rotateZ(theta)
        
+    }
 
-        this.currentMesh.geometry.attributes.position.needsUpdate = true
+    setPos(mousePos){
+        this.worldMousePosRotate = this.projector.projectWindowIntoWorld(mousePos)
 
     }
 }
