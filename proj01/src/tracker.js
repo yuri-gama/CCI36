@@ -1,5 +1,5 @@
 import { pointInPolygon } from './polygon.js'
-import { extractEdgesFromMesh } from './mesh.js'
+import {extractEdgesFromMesh    } from './mesh.js'
 import {angleBetweenVectors} from "./math.js";
 
 export class Tracker {
@@ -51,13 +51,16 @@ export class Tracker {
             this.currentMesh.position.setY(this.meshLastPos[1] + worldMousePos[1] - this.worldMousePos[1])
         }
         else{
-            const angleRotate = angleBetweenVectors(this.worldMousePosRotate, worldMousePos)
+            let old_position = this.currentMesh.worldToLocal(new THREE.Vector3(...this.worldMousePosRotate, 0))
+            let new_position = this.currentMesh.worldToLocal(new THREE.Vector3(...worldMousePos, 0))
+
+            const angleRotate = angleBetweenVectors([old_position.x, old_position.y], [new_position.x, new_position.y])
+
             if (!isNaN(angleRotate)) {
                 this.rotate(angleRotate)
                 this.worldMousePosRotate = worldMousePos
 
             }
-            this.worldMousePosRotate = worldMousePos
 
         }
         this.currentMesh.geometry.attributes.position.needsUpdate = true

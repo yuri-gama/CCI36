@@ -69,11 +69,11 @@ document.addEventListener('mouseup', (event) => {
 }, false)
 document.addEventListener('mousedown', (event) => {
     event.preventDefault()
-    if (event.button == 1) {
+    if (event.button == 0) {
         tracker.enable([event.clientX, event.clientY], true)
         tracker.setPos([event.clientX, event.clientY])
     }
-    else if (event.button == 0)
+    else if (event.button == 2)
         tracker.enable([event.clientX, event.clientY], false)
 }, false)
 document.addEventListener('mousemove', (event) => {
