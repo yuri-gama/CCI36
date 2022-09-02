@@ -1,6 +1,8 @@
 # Tangram
+
+A simplified Tangram game made with three.js
 ## Rotacao
-![vector](./img/vectors.png)
+![vector](./asset/vectors.png)
 
 Primeiramente, calculamos o angulo entre os vetores $\theta$ que sao construidos da seguinte maneira:
 $\vec{v} = \vec{cursor} - \vec{centerMesh}$
