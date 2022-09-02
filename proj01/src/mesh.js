@@ -19,15 +19,10 @@ export function extractEdgesFromMesh(mesh) {
 }
 
 export function createMesh(points, color, originX, originY){
-    let vectors = []
+    let vectors = points.map((p) => new THREE.Vector2(originX + p[0], originY + p[1])),
+        shape = new THREE.Shape(vectors),
+        geometry = new THREE.ShapeGeometry(shape),
+        material = new THREE.MeshBasicMaterial({ color: color });
 
-    for (let point of points)
-        vectors.push(new THREE.Vector2(originX + point[0], originY + point[1]));
-
-    let shape = new THREE.Shape(vectors);
-
-    let geometry = new THREE.ShapeGeometry( shape );
-    let material = new THREE.MeshBasicMaterial( { color: color } );
-
-    return new THREE.Mesh( geometry, material ) ;
+    return new THREE.Mesh(geometry, material) ;
 }
