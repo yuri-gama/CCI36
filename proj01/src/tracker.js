@@ -13,6 +13,7 @@ export class Tracker {
         this.meshLastPos = null;
         this.rotateEnable = false;
         this.worldMousePosRotate = null;
+        this.order = 1;
     }
 
     meshToCanvas(mesh) {
@@ -35,12 +36,19 @@ export class Tracker {
         if (!this.rotateEnable)
             this.worldMousePosRotate = this.projector.projectWindowIntoWorld(mousePos);
 
+        let highestOrder = -1
         for (let mesh of this.meshes) {
             let canvasEdges = this.meshToCanvas(mesh)
-            if (pointInPolygon(this.projector.projectWindowIntoCanvas(mousePos), canvasEdges)) {
+            if (pointInPolygon(this.projector.projectWindowIntoCanvas(mousePos), canvasEdges) && (mesh.renderOrder >= highestOrder)) {
+                highestOrder = mesh.renderOrder;
                 this.currentMesh = mesh;
                 this.meshLastPos = [this.currentMesh.position.x, this.currentMesh.position.y];
+                console.log(highestOrder)
             }
+        }
+        if (this.currentMesh) {
+            this.currentMesh.renderOrder = this.order;
+            this.order += 1;
         }
     }
 
@@ -110,7 +118,7 @@ export class Tracker {
 
     area() {
         let planeEdges = this.meshToCanvas(this.plane),
-            coveredArea = 0 
+            coveredArea = 0
 
         for (const mesh of this.meshes) {
             let edges = this.meshToCanvas(mesh),
@@ -126,7 +134,16 @@ export class Tracker {
                 coveredArea -= area(intersection)
             }
         }
-        return coveredArea/area(planeEdges)
+        return coveredArea / area(planeEdges)
+    }
+
+    randomizer(sensibility) {
+        for (const mesh of this.meshes) {
+            mesh.position.setX(mesh.position.x + sensibility * (0.5 - Math.random()))
+            mesh.position.setY(mesh.position.y + sensibility * (0.5 - Math.random()))
+            mesh.geometry.attributes.position.needsUpdate = true;
+        }
+        this.enabled = false
     }
 
 }
