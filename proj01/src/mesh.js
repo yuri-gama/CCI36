@@ -1,6 +1,5 @@
 export function extractEdgesFromMesh(mesh) {
-    let edgeArray = new THREE.EdgesGeometry(mesh.geometry).attributes.position
-        .array;
+    let edgeArray = new THREE.EdgesGeometry(mesh.geometry).attributes.position.array;
 
     let edges = [];
     for (let i = 0; i < edgeArray.length; i += 6) {
