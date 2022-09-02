@@ -15,7 +15,7 @@ export function pointInPolygon(point, edges) {
             intersections++
         }
     }
-    return (intersections%2 === 1)
+    return (intersections % 2 === 1)
 }
 
 
@@ -54,25 +54,24 @@ export function clippingSutherlandHodgman(clippingEdges, polygonEdges) {
                 // console.log("different side")
                 let segment = getLineBetweenPoints(pA, pB)
                 let intersection = toCartesian(getIntersectionBetweenLines(segment, line))
-                if (!pointInPositiveSide(line, pA)) 
-                {
+                if (!pointInPositiveSide(line, pA)) {
                     // console.log("negative side: adding (pA, inter)")
-                    nextPolygonEdges.push({first: toCartesian(pA), second: intersection})
+                    nextPolygonEdges.push({ first: toCartesian(pA), second: intersection })
                     waitingPoint = intersection
                 } else {
                     // console.log("positive side: adding (inter, pB)")
                     if (waitingPoint)
-                        nextPolygonEdges.push({first: waitingPoint, second: intersection})
+                        nextPolygonEdges.push({ first: waitingPoint, second: intersection })
                     else
                         lastPoint = intersection
-                    nextPolygonEdges.push({first: intersection, second: toCartesian(pB)})
+                    nextPolygonEdges.push({ first: intersection, second: toCartesian(pB) })
                     waitingPoint = null
                 }
             }
         }
 
         if (lastPoint && waitingPoint)
-            nextPolygonEdges.push({first: waitingPoint, second: lastPoint})
+            nextPolygonEdges.push({ first: waitingPoint, second: lastPoint })
 
         clippedPolygonEdges = nextPolygonEdges
     }
@@ -83,7 +82,7 @@ export function clippingSutherlandHodgman(clippingEdges, polygonEdges) {
 
 export function area(edges) {
     let area = 0
-    for (const { first: a, second: b} of edges)
-        area += (b[0] - a[0])*(b[1] + a[1])
-    return area/2
+    for (const { first: a, second: b } of edges)
+        area += (b[0] - a[0]) * (b[1] + a[1])
+    return area / 2
 }

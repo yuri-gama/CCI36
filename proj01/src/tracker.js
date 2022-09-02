@@ -1,82 +1,112 @@
-import { pointInPolygon } from './polygon.js'
-import {extractEdgesFromMesh    } from './mesh.js'
-import {angleBetweenVectors} from "./math.js";
+import { pointInPolygon } from "./polygon.js";
+import { extractEdgesFromMesh } from "./mesh.js";
+import { angleBetweenVectors } from "./math.js";
 
 export class Tracker {
-    constructor(meshes, projector) {
-        this.meshes = meshes
-        this.projector = projector
-        this.currentMesh = null
-        this.enabled = false
-        this.worldMousePos = null
-        this.meshLastPos = null
-        this.rotateEnable = false
-        this.worldMousePosRotate = null
-    }
+	constructor(meshes, projector) {
+		this.meshes = meshes;
+		this.projector = projector;
+		this.currentMesh = null;
+		this.enabled = false;
+		this.worldMousePos = null;
+		this.meshLastPos = null;
+		this.rotateEnable = false;
+		this.worldMousePosRotate = null;
+	}
 
-    enable(mousePos, rotateEnable) {
-        this.rotateEnable = rotateEnable
-        this.enabled = true
-        this.worldMousePos = this.projector.projectWindowIntoWorld(mousePos)
+	enable(mousePos) {
+		this.enabled = true;
+		this.worldMousePos = this.projector.projectWindowIntoWorld(mousePos);
 
-        for (let mesh of this.meshes) {
-            let worldEdges = extractEdgesFromMesh(mesh), canvasEdges = []
-            for (let worldEdge of worldEdges) {
-                canvasEdges.push({
-                    first: this.projector.projectWorldIntoCanvas(worldEdge.first),
-                    second: this.projector.projectWorldIntoCanvas(worldEdge.second)
-                })
-            }
-            if (pointInPolygon(this.projector.projectWindowIntoCanvas(mousePos), canvasEdges)) {
-                this.currentMesh = mesh
-                this.meshLastPos = [this.currentMesh.position.x, this.currentMesh.position.y]
-            }
-        }
-    }
+		if (!this.rotateEnable)
+			this.worldMousePosRotate =
+				this.projector.projectWindowIntoWorld(mousePos);
 
-    disable() {
-        this.enabled = false
-        this.rotateEnable = false
-        this.currentMesh = null
-    }
+		for (let mesh of this.meshes) {
+			let worldEdges = extractEdgesFromMesh(mesh),
+				canvasEdges = [];
+			for (let worldEdge of worldEdges) {
+				canvasEdges.push({
+					first: this.projector.projectWorldIntoCanvas(worldEdge.first),
+					second: this.projector.projectWorldIntoCanvas(worldEdge.second),
+				});
+			}
+			if (
+				pointInPolygon(
+					this.projector.projectWindowIntoCanvas(mousePos),
+					canvasEdges
+				)
+			) {
+				this.currentMesh = mesh;
+				this.meshLastPos = [
+					this.currentMesh.position.x,
+					this.currentMesh.position.y,
+				];
+			}
+		}
+	}
 
-    track(mousePos) {
-        if (!this.enabled || !this.currentMesh) {
-            return
-        }
+	disable() {
+		this.enabled = false;
+		this.rotateEnable = false;
+		this.currentMesh = null;
+	}
 
-        let worldMousePos = this.projector.projectWindowIntoWorld(mousePos)
-        if (!this.rotateEnable) {
-            this.currentMesh.position.setX(this.meshLastPos[0] + worldMousePos[0] - this.worldMousePos[0])
-            this.currentMesh.position.setY(this.meshLastPos[1] + worldMousePos[1] - this.worldMousePos[1])
-        }
-        else{
-            let old_position = this.currentMesh.worldToLocal(new THREE.Vector3(...this.worldMousePosRotate, 0))
-            let new_position = this.currentMesh.worldToLocal(new THREE.Vector3(...worldMousePos, 0))
+	enableRotation() {
+		// if (!this.rotateEnable) {
+		//     this.projector.projectWindowIntoWorld(mousePos)
+		//     this.worldMousePosRotate = new THREE.Vector3(0,0,0)
+		// }
+		this.rotateEnable = true;
+	}
 
-            const angleRotate = angleBetweenVectors([old_position.x, old_position.y], [new_position.x, new_position.y])
+	disableRotation() {
+		this.rotateEnable = false;
+	}
 
-            if (!isNaN(angleRotate)) {
-                this.rotate(angleRotate)
-                this.worldMousePosRotate = worldMousePos
+	track(mousePos) {
+		if (!this.enabled || !this.currentMesh) {
+			return;
+		}
 
-            }
+		let worldMousePos = this.projector.projectWindowIntoWorld(mousePos);
+		if (!this.rotateEnable) {
+			this.currentMesh.position.setX(
+				this.meshLastPos[0] + worldMousePos[0] - this.worldMousePos[0]
+			);
+			this.currentMesh.position.setY(
+				this.meshLastPos[1] + worldMousePos[1] - this.worldMousePos[1]
+			);
+		} else {
+			let old_position = this.currentMesh.worldToLocal(
+				new THREE.Vector3(...this.worldMousePosRotate, 0)
+			);
+			let new_position = this.currentMesh.worldToLocal(
+				new THREE.Vector3(...worldMousePos, 0)
+			);
 
-        }
-        this.currentMesh.geometry.attributes.position.needsUpdate = true
-    }
+			const angleRotate = angleBetweenVectors(
+				[old_position.x, old_position.y],
+				[new_position.x, new_position.y]
+			);
 
-    rotate(theta){
-        if (!this.enabled || !this.currentMesh || !this.rotateEnable) {
-            return
-        }
-       
-        this.currentMesh.rotateZ(theta)
-       
-    }
+			if (!isNaN(angleRotate)) {
+				this.rotate(angleRotate);
+				this.worldMousePosRotate = worldMousePos;
+			}
+		}
+		this.currentMesh.geometry.attributes.position.needsUpdate = true;
+	}
 
-    setPos(mousePos){
-        this.worldMousePosRotate = this.projector.projectWindowIntoWorld(mousePos)
+	rotate(theta) {
+		if (!this.enabled || !this.currentMesh || !this.rotateEnable) {
+			return;
+		}
 
-    }
+		this.currentMesh.rotateZ(theta);
+	}
+
+	setPos(mousePos) {
+		this.worldMousePosRotate = this.projector.projectWindowIntoWorld(mousePos);
+	}
 }

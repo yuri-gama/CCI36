@@ -1,7 +1,7 @@
 function cross(a, b) {
-    let c1 = a[1]*b[2] - a[2]*b[1]
-    let c2 = a[2]*b[0] - a[0]*b[2]
-    let c3 = a[0]*b[1] - a[1]*b[0]
+    let c1 = a[1] * b[2] - a[2] * b[1]
+    let c2 = a[2] * b[0] - a[0] * b[2]
+    let c3 = a[0] * b[1] - a[1] * b[0]
     return [c1, c2, c3]
 }
 
@@ -11,7 +11,7 @@ function dot(a, b) {
         return 0
     }
     for (let i in a) {
-        res += a[i]*b[i]
+        res += a[i] * b[i]
     }
     return res
 }
@@ -36,7 +36,7 @@ export function pointsOnSameSideOfLine(l, a, b) {
     if (b[2] < 0) {
         normB = not(normB)
     }
-    return (Math.sign(dot(l, normA))*Math.sign(dot(l, normB)) >= 0)
+    return (Math.sign(dot(l, normA)) * Math.sign(dot(l, normB)) >= 0)
 }
 
 export function pointBetweenPoints(p, a, b) {
@@ -54,19 +54,19 @@ export function segmentsIntersect(a, b, m, n) {
     return (pointBetweenPoints(intersection, a, b) && pointBetweenPoints(intersection, m, n))
 }
 
-export function angleBetweenVectors(a,b){
-    const cos = (dot(a,b))/Math.sqrt(dot(a,a)*dot(b,b))
-    const signal = a[0]*b[1] - a[1]*b[0]
+export function angleBetweenVectors(a, b) {
+    const cos = (dot(a, b)) / Math.sqrt(dot(a, a) * dot(b, b))
+    const signal = a[0] * b[1] - a[1] * b[0]
 
-    return Math.sign(signal)*Math.acos(cos)
+    return Math.sign(signal) * Math.acos(cos)
 }
 
 export function pointInPositiveSide(l, a) {
-    return (dot(l,a) > 0)
+    return (dot(l, a) > 0)
 }
 
 export function toCartesian(p) {
-    return [p[0]/p[2], p[1]/p[2]]
+    return [p[0] / p[2], p[1] / p[2]]
 }
 
 export function toProjective(p) {
