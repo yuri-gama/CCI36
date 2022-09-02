@@ -53,3 +53,15 @@ export function segmentsIntersect(a, b, m, n) {
 
     return (pointBetweenPoints(intersection, a, b) && pointBetweenPoints(intersection, m, n))
 }
+
+export function pointInPositiveSide(l, a) {
+    return (dot(l,a) > 0)
+}
+
+export function toCartesian(p) {
+    return [p[0]/p[2], p[1]/p[2]]
+}
+
+export function toProjective(p) {
+    return [...p, 1]
+}
