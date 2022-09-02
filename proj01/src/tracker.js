@@ -43,7 +43,6 @@ export class Tracker {
                 highestOrder = mesh.renderOrder;
                 this.currentMesh = mesh;
                 this.meshLastPos = [this.currentMesh.position.x, this.currentMesh.position.y];
-                console.log(highestOrder)
             }
         }
         if (this.currentMesh) {
