@@ -17,3 +17,17 @@ export function extractEdgesFromMesh(mesh) {
     }
     return edges
 }
+
+export function createMesh(points, color, originX, originY){
+    let vectors = []
+
+    for (let point of points)
+        vectors.push(new THREE.Vector2(originX + point[0], originY + point[1]));
+
+    let shape = new THREE.Shape(vectors);
+
+    let geometry = new THREE.ShapeGeometry( shape );
+    let material = new THREE.MeshBasicMaterial( { color: color } );
+
+    return new THREE.Mesh( geometry, material ) ;
+}
