@@ -83,7 +83,7 @@ function animate() {
     requestAnimationFrame(animate);
 
     let coveredArea = tracker.area()
-    console.log(coveredArea)
+    // console.log(coveredArea)
     if (0.97 < coveredArea && coveredArea <= 1) {
         alert("You rock!")
         tracker.randomizer(200)
