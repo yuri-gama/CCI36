@@ -73,14 +73,21 @@ estendido ao infinito, número que, se for ímpar, indica que o ponto está dent
 
 ![point in polygon](./asset/point-in-polygon.svg)
 
-## Rotacao
+## Rotação  
+
 ![vector](./asset/vectors.png)
 
-Primeiramente, calculamos o angulo entre os vetores $\theta$ que sao construidos da seguinte maneira:
+Primeiramente, calculamos o ângulo entre os vetores $\theta$ que sao construidos da seguinte maneira:
 $\vec{v} = \vec{cursor} - \vec{centerMesh}$
 
-Utilizando o arco cosseno, encontramos o angulo entre 0 e 180 em radiano.  
-Alem disso, eh analisado o sinal do produto vetorial entre o antigo vetor posicao e o novo para saber se girou em sentido horario ou anti-horario
+Utilizando o arco cosseno, encontramos um ângulo entre 0 e 180 graus em radianos.  
+Além disso, é analisado o sinal do produto vetorial entre o antigo vetor posição e o novo para saber se girou em sentido horario ou anti-horário. (A regra da mão direita)  
+
+<center> <img src="./asset/mao_direita.jpg"  width=50%> </center>
+
+Vale ressaltar, que para que não exista problema para que o ângulo exceda 180 graus, o movimento do cursor é ¨*trackeado*¨, ou seja, a antiga e a nova posição são atualizadas a ¨todo instante¨.
+
+É necessário, também, converter a posição do mouse para o referencial do Mesh, pois para o Mesh, a origem é o seu centro.
 
 
 ## Algoritmo da área de interseção dos polígonos
